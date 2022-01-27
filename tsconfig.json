@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "typeRoots": ["./node_modules/@types"],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "lib": ["ES2016", "DOM"],
+        "outDir": "dist",
+        "experimentalDecorators": true,
+        "jsx": "react"
+    }
+}

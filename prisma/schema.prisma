@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMINISTRATOR
+  TESTTRACKMANAGER
+  TESTSUPERVISOR
+  TESTARCHITECT
+}
+
+model User {
+  id String @id @default(uuid())
+  userName String @unique
+  displayName String
+  passwordHash String
+  role String
+
+  managedTestTracks TestTrack[]
+  testChambers TestChamber[]
+
+  announcements Announcement[]
+}
+
+model Announcement {
+  id String @id @default(uuid())
+  title String
+  contents String
+
+  createdAt DateTime
+  
+  authorId String
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model TestTrack {
+  id String @id @default(uuid())
+  name String
+
+  managerId String
+  manager User @relation(fields: [managerId], references: [id], onDelete: Cascade)
+
+  testChambers TestChamber[]
+}
+
+model TestChamber {
+  id String @id @default(uuid())
+  name String
+
+  architectId String
+  architect User @relation(fields: [architectId], references: [id], onDelete: Cascade)
+
+  design Json
+
+  createdAt DateTime
+  modifiedAt DateTime
+
+  testObjectId String
+  testObject TestObject @relation(fields: [testObjectId], references: [id], onDelete: Cascade)
+
+  testTracks TestTrack[]
+}
+
+model TestObject {
+  id String @id @default(uuid())
+
+  name String
+
+  testChambers TestChamber[]
+}
